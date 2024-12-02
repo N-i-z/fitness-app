@@ -64,6 +64,20 @@ export class TenantService {
     return tenant;
   }
 
+  async checkUserAccessToTenant(userId: string, id: string): Promise<boolean> {
+    const tenant = await this.prisma.tenant.findFirst({
+      where: {
+        id,
+        users: {
+          some: {
+            userId,
+          },
+        },
+      },
+    });
+    return !!tenant;
+  }
+
   // async remove(userId: string, id: string) {
   //   await this.findOne(userId, id);
 

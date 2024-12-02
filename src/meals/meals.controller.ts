@@ -13,9 +13,10 @@ import { MealsService } from './meals.service';
 import { CreateMealDto } from './dto/create-meal.dto';
 import { ClerkGuard } from 'src/clerk/clerk.guard';
 import { UserId } from 'src/clerk/user-id.decorator';
+import { TenantGuard } from 'src/clerk/tenant.guard';
 
-@Controller('users/me/meals')
-@UseGuards(ClerkGuard)
+@Controller('tenant/:tenantId/users/me/meals')
+@UseGuards(ClerkGuard, TenantGuard)
 export class MealsController {
   constructor(private readonly mealsService: MealsService) {}
 

@@ -18,7 +18,6 @@ export class ClerkGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const userId = request.auth?.userId;
     const emailAddress = request.auth?.email;
-    const tenantId = request.auth?.tenantId;
 
     if (!userId || !emailAddress) {
       throw new BadRequestException('Invalid request');
@@ -30,7 +29,7 @@ export class ClerkGuard implements CanActivate {
         name: request.auth?.username,
         email: emailAddress,
       });
-      await this.tenantService.create(tenantId, {
+      await this.tenantService.create(userId, {
         name: 'my organization',
       });
     }

@@ -13,9 +13,10 @@ import { WeightService } from './weight.service';
 import { CreateWeightDto } from './dto/create-weight.dto';
 import { UserId } from 'src/clerk/user-id.decorator';
 import { ClerkGuard } from 'src/clerk/clerk.guard';
+import { TenantGuard } from 'src/clerk/tenant.guard';
 
 @Controller('tenant/:tenantId/users/me/weight')
-@UseGuards(ClerkGuard)
+@UseGuards(ClerkGuard, TenantGuard)
 export class WeightController {
   constructor(private readonly weightService: WeightService) {}
 

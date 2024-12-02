@@ -13,9 +13,10 @@ import { MedicationsService } from './medication.service';
 import { CreateMedicationDto } from './dto/create-medication.dto';
 import { ClerkGuard } from 'src/clerk/clerk.guard';
 import { UserId } from 'src/clerk/user-id.decorator';
+import { TenantGuard } from 'src/clerk/tenant.guard';
 
 @Controller('tenat/:tenantId/users/me/medication')
-@UseGuards(ClerkGuard)
+@UseGuards(ClerkGuard, TenantGuard)
 export class MedicationsController {
   constructor(private readonly medicationsService: MedicationsService) {}
 

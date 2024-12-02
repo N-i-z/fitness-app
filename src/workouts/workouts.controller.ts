@@ -13,9 +13,10 @@ import { WorkoutsService } from './workouts.service';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { ClerkGuard } from 'src/clerk/clerk.guard';
 import { UserId } from 'src/clerk/user-id.decorator';
+import { TenantGuard } from 'src/clerk/tenant.guard';
 
 @Controller('tenant/:tenantId/users/me/workout')
-@UseGuards(ClerkGuard)
+@UseGuards(ClerkGuard, TenantGuard)
 export class WorkoutsController {
   constructor(private readonly workoutsService: WorkoutsService) {}
 
