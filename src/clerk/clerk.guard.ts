@@ -20,7 +20,8 @@ export class ClerkGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const userId = request.auth?.userId;
-    const tenantId = request.auth?.tenantId;
+    const tenantId = request.auth?.orgId;
+    const userTenantRole = request.auth?.orgRole;
 
     if (!userId) {
       throw new BadRequestException('User ID is missing');
@@ -40,19 +41,49 @@ export class ClerkGuard implements CanActivate {
       }
 
       let existingUser = await this.userService.findUserById(userId);
-
       if (!existingUser) {
         existingUser = await this.userService.createDBUser(userId, {
-          name: request.auth?.username || 'anonymous',
+          name: user.username,
           email: [emailAddress],
         });
+      }
 
-        if (tenantId) {
-          await this.tenantService.createDBTenant(userId, tenantId, {
-            name: 'My Organization',
+      let existingTenant;
+      if (!tenantId) {
+        // Personal account
+        existingTenant = await this.tenantService.findTenantById(userId);
+        if (!existingTenant) {
+          existingTenant = await this.tenantService.createDBTenant(
+            userId,
+            userId,
+            { name: 'My Organization' },
+          );
+        }
+      } else {
+        // Organization
+        existingTenant = await this.tenantService.findTenantById(tenantId);
+        if (!existingTenant) {
+          const organization = await clerkClient.organizations.getOrganization({
+            organizationId: tenantId,
           });
+          existingTenant = await this.tenantService.createDBTenant(
+            userId,
+            tenantId,
+            { name: organization.name },
+          );
         } else {
-          throw new BadRequestException('Tenant ID is missing');
+          // Check if the user is already a member of the organization
+          const userIsMember = await this.tenantService.checkUserAccessToTenant(
+            userId,
+            tenantId,
+          );
+          if (!userIsMember) {
+            await this.tenantService.addUserToTenant(
+              userId,
+              tenantId,
+              userTenantRole,
+            );
+          }
         }
       }
 

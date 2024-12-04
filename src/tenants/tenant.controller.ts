@@ -41,21 +41,17 @@ export class TenantController {
       UserId,
       createTenantDto,
     );
-    const usersOfTenants = this.tenantService.addToUsersOfTenants(
-      id,
-      UserId,
-      role,
-    );
+    const usersOfTenants = this.tenantService.addUserToTenant(id, UserId, role);
     return { tenant, usersOfTenants };
   }
   @Get()
   findAll(@UserId() userId: string) {
-    return this.tenantService.findAll(userId);
+    return this.tenantService.findAllTenantsOfUser(userId);
   }
 
   @Get(':id')
   findOne(@UserId() userId: string, @Param('id') id: string) {
-    return this.tenantService.findOne(userId, id);
+    return this.tenantService.findUsersTenant(userId, id);
   }
 
   // @Delete(':id')
