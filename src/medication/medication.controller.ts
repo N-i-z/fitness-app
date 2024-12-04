@@ -13,17 +13,17 @@ import { MedicationsService } from './medication.service';
 import { CreateMedicationDto } from './dto/create-medication.dto';
 import { ClerkGuard } from 'src/clerk/clerk.guard';
 import { UserId } from 'src/clerk/user-id.decorator';
-import { TenantGuard } from 'src/clerk/tenant.guard';
+import { TenantId } from 'src/clerk/tenant-id.decorator';
 
-@Controller('tenat/:tenantId/users/me/medication')
-@UseGuards(ClerkGuard, TenantGuard)
+@Controller('users/me/medication')
+@UseGuards(ClerkGuard)
 export class MedicationsController {
   constructor(private readonly medicationsService: MedicationsService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(
-    @Param('tenantId') tenantId: string,
+    @TenantId() tenantId: string,
     @UserId() userId: string,
     @Body() createMedicationDto: CreateMedicationDto,
   ) {
@@ -35,26 +35,23 @@ export class MedicationsController {
   }
 
   @Get()
-  findAll(@Param(`tenantId`) tenantId: string, @UserId() userId: string) {
+  findAll(@TenantId() tenantId: string, @UserId() userId: string) {
     return this.medicationsService.findAll(tenantId, userId);
   }
 
   @Get('taken')
-  findAllTaken(@Param(`tenantId`) tenantId: string, @UserId() userId: string) {
+  findAllTaken(@TenantId() tenantId: string, @UserId() userId: string) {
     return this.medicationsService.findAllTaken(tenantId, userId);
   }
 
   @Get('not-taken')
-  findAllNotTaken(
-    @Param(`tenantId`) tenantId: string,
-    @UserId() userId: string,
-  ) {
+  findAllNotTaken(@TenantId() tenantId: string, @UserId() userId: string) {
     return this.medicationsService.findAllNotTaken(tenantId, userId);
   }
 
   @Get(':id')
   findOne(
-    @Param(`tenantId`) tenantId: string,
+    @TenantId() tenantId: string,
     @UserId() userId: string,
     @Param('id') id: string,
   ) {
@@ -64,7 +61,7 @@ export class MedicationsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(
-    @Param(`tenantId`) tenantId: string,
+    @TenantId() tenantId: string,
     @UserId() userId: string,
     @Param('id') id: string,
   ) {

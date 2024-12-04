@@ -13,6 +13,9 @@ import { TenantService } from './tenant.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UserId } from 'src/clerk/user-id.decorator';
 import { ClerkGuard } from 'src/clerk/clerk.guard';
+import { TenantId } from 'src/clerk/tenant-id.decorator';
+import { RoleDecorator } from 'src/roles/roles.decorator';
+import { Role } from 'src/roles/role.enum';
 
 @Controller('tenant')
 @UseGuards(ClerkGuard)
@@ -25,6 +28,26 @@ export class TenantController {
     return this.tenantService.create(userId, createTenantDto);
   }
 
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  createDBTenant(
+    @UserId() UserId: string,
+    @TenantId() id: string,
+    @RoleDecorator() role: Role,
+    @Body() createTenantDto: CreateTenantDto,
+  ) {
+    const tenant = this.tenantService.createDBTenant(
+      id,
+      UserId,
+      createTenantDto,
+    );
+    const usersOfTenants = this.tenantService.addToUsersOfTenants(
+      id,
+      UserId,
+      role,
+    );
+    return { tenant, usersOfTenants };
+  }
   @Get()
   findAll(@UserId() userId: string) {
     return this.tenantService.findAll(userId);

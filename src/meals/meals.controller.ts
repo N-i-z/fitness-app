@@ -13,17 +13,17 @@ import { MealsService } from './meals.service';
 import { CreateMealDto } from './dto/create-meal.dto';
 import { ClerkGuard } from 'src/clerk/clerk.guard';
 import { UserId } from 'src/clerk/user-id.decorator';
-import { TenantGuard } from 'src/clerk/tenant.guard';
+import { TenantId } from 'src/clerk/tenant-id.decorator';
 
-@Controller('tenant/:tenantId/users/me/meals')
-@UseGuards(ClerkGuard, TenantGuard)
+@Controller('users/me/meals')
+@UseGuards(ClerkGuard)
 export class MealsController {
   constructor(private readonly mealsService: MealsService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(
-    @Param(`tenantId`) tenantId: string,
+    @TenantId() tenantId: string,
     @UserId() userId: string,
     @Body() createMealDto: CreateMealDto,
   ) {
@@ -31,13 +31,13 @@ export class MealsController {
   }
 
   @Get()
-  findAll(@Param(`tenantId`) tenantId: string, @UserId() userId: string) {
+  findAll(@TenantId() tenantId: string, @UserId() userId: string) {
     return this.mealsService.findAll(tenantId, userId);
   }
 
   @Get(':id')
   findOne(
-    @Param(`tenantId`) tenantId: string,
+    @TenantId() tenantId: string,
     @UserId() userId: string,
     @Param('id') id: string,
   ) {
@@ -47,7 +47,7 @@ export class MealsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(
-    @Param(`tenantId`) tenantId: string,
+    @TenantId() tenantId: string,
     @UserId() userId: string,
     @Param('id') id: string,
   ) {
