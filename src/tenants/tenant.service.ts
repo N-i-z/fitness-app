@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { ClerkService } from 'src/clerk/clerk.service';
+import { Role } from 'src/roles/role.enum';
 
 @Injectable()
 export class TenantService {
@@ -15,19 +16,31 @@ export class TenantService {
       userId,
       createTenantDto.name,
     );
+
+    return await this.createDBTenant(userId, tenantId, createTenantDto);
+  }
+
+  async createDBTenant(
+    userId: string,
+    tenantId: string,
+    createTenantDto: CreateTenantDto,
+  ) {
     const tenantData = {
       ...createTenantDto,
-      date: new Date(),
-      userId,
+      createdAt: new Date(),
       id: tenantId,
     };
 
-    return await this.prisma.tenant.create({
+    await this.prisma.tenant.create({
       data: tenantData,
     });
+
+    await this.addUserToTenant(userId, tenantId, Role.Admin);
+
+    return this.findTenantById(tenantId);
   }
 
-  async findAll(userId: string) {
+  async findAllTenantsOfUser(userId: string) {
     return await this.prisma.tenant.findMany({
       where: {
         users: {
@@ -41,7 +54,7 @@ export class TenantService {
     });
   }
 
-  async findOne(userId: string, id: string) {
+  async findUsersTenant(userId: string, id: string) {
     const tenant = await this.prisma.tenant.findFirst({
       where: {
         id,
@@ -54,14 +67,40 @@ export class TenantService {
         },
       },
     });
-
-    if (!tenant) {
-      throw new NotFoundException(
-        `Tenant log with ID ${id} not found for user ${userId}`,
-      );
-    }
-
     return tenant;
+  }
+
+  async findTenantById(id: string) {
+    return await this.prisma.tenant.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async checkUserAccessToTenant(userId: string, id: string): Promise<boolean> {
+    const tenant = await this.prisma.tenant.findFirst({
+      where: {
+        id,
+        users: {
+          some: {
+            userId,
+          },
+        },
+      },
+    });
+    return !!tenant;
+  }
+
+  async addUserToTenant(userId: string, tenantId: string, role: Role) {
+    const userOfTenant = await this.prisma.usersOfTenants.create({
+      data: {
+        userId,
+        tenantId,
+        role,
+      },
+    });
+    return userOfTenant;
   }
 
   // async remove(userId: string, id: string) {

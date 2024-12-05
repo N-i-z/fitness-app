@@ -7,7 +7,6 @@ import { UserId } from 'src/clerk/user-id.decorator';
 @UseGuards(ClerkGuard)
 export class JournalController {
   constructor(private readonly journalService: JournalService) {}
-
   @Get()
   findAll(@UserId() userId: string) {
     return this.journalService.findAll(userId);

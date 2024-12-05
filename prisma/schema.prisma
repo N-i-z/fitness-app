@@ -14,7 +14,7 @@ generator erd {
 model User {
   id              String            @id
   name            String
-  email           String[]            @unique 
+  email           String[]           
   createdAt       DateTime @default(now())
   meals           Meal[]
   workouts        Workout[]
@@ -40,7 +40,7 @@ model UsersOfTenants {
   tenant      Tenant @relation(fields: [tenantId], references: [id])
   tenantId    String
   createdAt   DateTime @default(now())
-  role        Role
+  role        String
   @@id([userId, tenantId])
 }
 
@@ -95,9 +95,4 @@ model MedicationLog {
   user      User     @relation(fields: [userId], references: [id])
   tenantId                String
   tenant                  Tenant   @relation(fields: [tenantId], references: [id])
-}
-
-enum Role {
-  Admin
-  Member
 }

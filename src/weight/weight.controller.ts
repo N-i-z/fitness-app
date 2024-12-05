@@ -13,8 +13,9 @@ import { WeightService } from './weight.service';
 import { CreateWeightDto } from './dto/create-weight.dto';
 import { UserId } from 'src/clerk/user-id.decorator';
 import { ClerkGuard } from 'src/clerk/clerk.guard';
+import { TenantId } from 'src/clerk/tenant-id.decorator';
 
-@Controller('tenant/:tenantId/users/me/weight')
+@Controller('users/me/weight')
 @UseGuards(ClerkGuard)
 export class WeightController {
   constructor(private readonly weightService: WeightService) {}
@@ -22,7 +23,7 @@ export class WeightController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(
-    @Param(`tenantId`) tenantId: string,
+    @TenantId() tenantId: string,
     @UserId() userId: string,
     @Body() createWeightDto: CreateWeightDto,
   ) {
@@ -30,13 +31,13 @@ export class WeightController {
   }
 
   @Get()
-  findAll(@Param(`tenantId`) tenantId: string, @UserId() userId: string) {
+  findAll(@TenantId() tenantId: string, @UserId() userId: string) {
     return this.weightService.findAll(tenantId, userId);
   }
 
   @Get(':id')
   findOne(
-    @Param(`tenantId`) tenantId: string,
+    @TenantId() tenantId: string,
     @UserId() userId: string,
     @Param('id') id: string,
   ) {
@@ -46,7 +47,7 @@ export class WeightController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(
-    @Param(`tenantId`) tenantId: string,
+    @TenantId() tenantId: string,
     @UserId() userId: string,
     @Param('id') id: string,
   ) {
