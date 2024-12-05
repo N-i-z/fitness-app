@@ -11,7 +11,7 @@ export class TenantService {
     private readonly clerkService: ClerkService,
   ) {}
 
-  async create(userId: string, createTenantDto: CreateTenantDto) {
+  async createTenant(userId: string, createTenantDto: CreateTenantDto) {
     const tenantId = await this.clerkService.createTenant(
       userId,
       createTenantDto.name,
@@ -103,11 +103,11 @@ export class TenantService {
     return userOfTenant;
   }
 
-  // async remove(userId: string, id: string) {
-  //   await this.findOne(userId, id);
+  async remove(userId: string, id: string) {
+    await this.findUsersTenant(userId, id);
 
-  //   return await this.prisma.tenant.delete({
-  //     where: { id, userId },
-  //   });
-  // }
+    return await this.prisma.tenant.delete({
+      where: { id },
+    });
+  }
 }

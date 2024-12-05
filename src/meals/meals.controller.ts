@@ -27,12 +27,12 @@ export class MealsController {
     @UserId() userId: string,
     @Body() createMealDto: CreateMealDto,
   ) {
-    return this.mealsService.create(tenantId, userId, createMealDto);
+    return this.mealsService.createMeal(tenantId, userId, createMealDto);
   }
 
   @Get()
   findAll(@TenantId() tenantId: string, @UserId() userId: string) {
-    return this.mealsService.findAll(tenantId, userId);
+    return this.mealsService.findAllMealsOfTenantUser(tenantId, userId);
   }
 
   @Get(':id')
@@ -41,7 +41,7 @@ export class MealsController {
     @UserId() userId: string,
     @Param('id') id: string,
   ) {
-    return this.mealsService.findOne(tenantId, userId, id);
+    return this.mealsService.findOneMealOfTenantUser(tenantId, userId, id);
   }
 
   @Delete(':id')
@@ -51,6 +51,6 @@ export class MealsController {
     @UserId() userId: string,
     @Param('id') id: string,
   ) {
-    return this.mealsService.remove(tenantId, userId, id);
+    return this.mealsService.removeMeal(tenantId, userId, id);
   }
 }

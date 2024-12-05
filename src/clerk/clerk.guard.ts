@@ -4,7 +4,6 @@ import {
   ExecutionContext,
   BadRequestException,
 } from '@nestjs/common';
-import { ClerkService } from 'src/clerk/clerk.service';
 import { clerkClient } from '@clerk/express';
 import { UserService } from 'src/user/user.service';
 import { TenantService } from 'src/tenants/tenant.service';
@@ -14,7 +13,6 @@ export class ClerkGuard implements CanActivate {
   constructor(
     private readonly userService: UserService,
     private readonly tenantService: TenantService,
-    private readonly clerkService: ClerkService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

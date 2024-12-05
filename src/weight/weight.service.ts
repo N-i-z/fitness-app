@@ -6,7 +6,7 @@ import { CreateWeightDto } from './dto/create-weight.dto';
 export class WeightService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(
+  async createWeight(
     tenantId: string,
     userId: string,
     createWeightDto: CreateWeightDto,
@@ -23,14 +23,18 @@ export class WeightService {
     });
   }
 
-  async findAll(tenantId: string, userId: string) {
+  async findAllWeightOfTenantUser(tenantId: string, userId: string) {
     return await this.prisma.weightLog.findMany({
       where: { tenantId, userId },
       orderBy: { date: 'desc' },
     });
   }
 
-  async findOne(tenantId: string, userId: string, id: string) {
+  async findOneWeightOfTenantUser(
+    tenantId: string,
+    userId: string,
+    id: string,
+  ) {
     const weightLog = await this.prisma.weightLog.findFirst({
       where: {
         id,
@@ -49,7 +53,7 @@ export class WeightService {
   }
 
   async remove(tenantId: string, userId: string, id: string) {
-    await this.findOne(tenantId, userId, id);
+    await this.findOneWeightOfTenantUser(tenantId, userId, id);
 
     return await this.prisma.weightLog.delete({
       where: { id },

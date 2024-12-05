@@ -12,7 +12,11 @@ export class MealsService {
     private readonly configService: ConfigService,
   ) {}
 
-  async create(tenantId: string, userId: string, createMealDto: CreateMealDto) {
+  async createMeal(
+    tenantId: string,
+    userId: string,
+    createMealDto: CreateMealDto,
+  ) {
     const nutritionInfo = await this.getNutritionInfo(
       createMealDto.name,
       createMealDto.weight,
@@ -28,13 +32,13 @@ export class MealsService {
     });
   }
 
-  async findAll(tenantId: string, userId: string) {
+  async findAllMealsOfTenantUser(tenantId: string, userId: string) {
     return await this.prisma.meal.findMany({
       where: { tenantId, userId },
     });
   }
 
-  async findOne(tenantId: string, userId: string, id: string) {
+  async findOneMealOfTenantUser(tenantId: string, userId: string, id: string) {
     const meal = await this.prisma.meal.findFirst({
       where: {
         id,
@@ -52,8 +56,8 @@ export class MealsService {
     return meal;
   }
 
-  async remove(tenantId: string, userId: string, id: string) {
-    await this.findOne(tenantId, userId, id);
+  async removeMeal(tenantId: string, userId: string, id: string) {
+    await this.findOneMealOfTenantUser(tenantId, userId, id);
 
     return await this.prisma.meal.delete({
       where: {

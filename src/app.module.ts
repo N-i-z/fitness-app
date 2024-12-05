@@ -1,7 +1,6 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TenantsModule } from './tenants/tenant.module';
 import { PrismaModule } from './prisma/prisma.module';
-// import { DatabaseModule } from './database/database.module';
 import { WorkoutsModule } from './workouts/workouts.module';
 import { MealsModule } from './meals/meals.module';
 import { WeightModule } from './weight/weight.module';
@@ -10,6 +9,7 @@ import { JournalModule } from './journal/journal.module';
 import { ClerkMiddleware } from './clerk/clerk.middleware';
 import { ConfigModule } from '@nestjs/config';
 import { ClerkModule } from './clerk/clerk.module';
+import { ClerkSyncModule } from './clerk-sync/clerk-sync.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { ClerkModule } from './clerk/clerk.module';
     JournalModule,
     TenantsModule,
     PrismaModule,
-    // DatabaseModule,
+    ClerkSyncModule,
     WorkoutsModule,
     MealsModule,
     WeightModule,

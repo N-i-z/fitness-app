@@ -1,6 +1,3 @@
--- CreateEnum
-CREATE TYPE "Role" AS ENUM ('Admin', 'Member');
-
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -25,7 +22,7 @@ CREATE TABLE "UsersOfTenants" (
     "userId" TEXT NOT NULL,
     "tenantId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "role" "Role" NOT NULL,
+    "role" TEXT NOT NULL,
 
     CONSTRAINT "UsersOfTenants_pkey" PRIMARY KEY ("userId","tenantId")
 );
