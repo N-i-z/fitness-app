@@ -27,7 +27,7 @@ export class MedicationsController {
     @UserId() userId: string,
     @Body() createMedicationDto: CreateMedicationDto,
   ) {
-    return this.medicationsService.create(
+    return this.medicationsService.createMedication(
       tenantId,
       userId,
       createMedicationDto,
@@ -36,17 +36,26 @@ export class MedicationsController {
 
   @Get()
   findAll(@TenantId() tenantId: string, @UserId() userId: string) {
-    return this.medicationsService.findAll(tenantId, userId);
+    return this.medicationsService.findAllMedicationOfTenantUser(
+      tenantId,
+      userId,
+    );
   }
 
   @Get('taken')
   findAllTaken(@TenantId() tenantId: string, @UserId() userId: string) {
-    return this.medicationsService.findAllTaken(tenantId, userId);
+    return this.medicationsService.findAllMedicationTakenOfTenantUser(
+      tenantId,
+      userId,
+    );
   }
 
   @Get('not-taken')
   findAllNotTaken(@TenantId() tenantId: string, @UserId() userId: string) {
-    return this.medicationsService.findAllNotTaken(tenantId, userId);
+    return this.medicationsService.findAllMedicationNotTakenOfTenantUser(
+      tenantId,
+      userId,
+    );
   }
 
   @Get(':id')
@@ -55,7 +64,11 @@ export class MedicationsController {
     @UserId() userId: string,
     @Param('id') id: string,
   ) {
-    return this.medicationsService.findOne(tenantId, userId, id);
+    return this.medicationsService.findOneMedicationOfTenantUser(
+      tenantId,
+      userId,
+      id,
+    );
   }
 
   @Delete(':id')
@@ -65,6 +78,6 @@ export class MedicationsController {
     @UserId() userId: string,
     @Param('id') id: string,
   ) {
-    return this.medicationsService.remove(tenantId, userId, id);
+    return this.medicationsService.removeMedication(tenantId, userId, id);
   }
 }

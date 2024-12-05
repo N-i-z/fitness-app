@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ClerkService } from 'src/clerk/clerk.service';
@@ -41,11 +41,6 @@ export class UserService {
         id,
       },
     });
-
-    // if (!user) {
-    //   throw new NotFoundException(`User with id ${id} not found`);
-    // }
-
     return user;
   }
 }

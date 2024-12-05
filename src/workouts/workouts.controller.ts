@@ -27,12 +27,16 @@ export class WorkoutsController {
     @UserId() userId: string,
     @Body() createWorkoutDto: CreateWorkoutDto,
   ) {
-    return this.workoutsService.create(tenantId, userId, createWorkoutDto);
+    return this.workoutsService.createWorkout(
+      tenantId,
+      userId,
+      createWorkoutDto,
+    );
   }
 
   @Get()
   findAll(@TenantId() tenantId: string, @UserId() userId: string) {
-    return this.workoutsService.findAll(tenantId, userId);
+    return this.workoutsService.findAllWorkoutsOfTenantUser(tenantId, userId);
   }
 
   @Get(':id')
@@ -41,7 +45,11 @@ export class WorkoutsController {
     @UserId() userId: string,
     @Param('id') id: string,
   ) {
-    return this.workoutsService.findOne(tenantId, userId, id);
+    return this.workoutsService.findOneWorkoutOfTenantUser(
+      tenantId,
+      userId,
+      id,
+    );
   }
 
   @Delete(':id')
