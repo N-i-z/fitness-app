@@ -27,12 +27,12 @@ export class WeightController {
     @UserId() userId: string,
     @Body() createWeightDto: CreateWeightDto,
   ) {
-    return this.weightService.create(tenantId, userId, createWeightDto);
+    return this.weightService.createWeight(tenantId, userId, createWeightDto);
   }
 
   @Get()
   findAll(@TenantId() tenantId: string, @UserId() userId: string) {
-    return this.weightService.findAll(tenantId, userId);
+    return this.weightService.findAllWeightOfTenantUser(tenantId, userId);
   }
 
   @Get(':id')
@@ -41,7 +41,7 @@ export class WeightController {
     @UserId() userId: string,
     @Param('id') id: string,
   ) {
-    return this.weightService.findOne(tenantId, userId, id);
+    return this.weightService.findOneWeightOfTenantUser(tenantId, userId, id);
   }
 
   @Delete(':id')

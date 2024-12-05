@@ -6,7 +6,7 @@ import { CreateWorkoutDto } from './dto/create-workout.dto';
 export class WorkoutsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(
+  async createWorkout(
     tenantId: string,
     userId: string,
     createWorkoutDto: CreateWorkoutDto,
@@ -23,14 +23,18 @@ export class WorkoutsService {
     });
   }
 
-  async findAll(tenantId: string, userId: string) {
+  async findAllWorkoutsOfTenantUser(tenantId: string, userId: string) {
     return await this.prisma.workout.findMany({
       where: { tenantId, userId },
       orderBy: { date: 'desc' },
     });
   }
 
-  async findOne(tenantId: string, userId: string, id: string) {
+  async findOneWorkoutOfTenantUser(
+    tenantId: string,
+    userId: string,
+    id: string,
+  ) {
     const workout = await this.prisma.workout.findFirst({
       where: {
         id,
@@ -49,7 +53,7 @@ export class WorkoutsService {
   }
 
   async remove(tenantId: string, userId: string, id: string) {
-    await this.findOne(tenantId, userId, id);
+    await this.findOneWorkoutOfTenantUser(tenantId, userId, id);
 
     return await this.prisma.workout.delete({
       where: {

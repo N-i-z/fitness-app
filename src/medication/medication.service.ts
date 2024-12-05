@@ -6,7 +6,7 @@ import { CreateMedicationDto } from './dto/create-medication.dto';
 export class MedicationsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(
+  async createMedication(
     tenantId: string,
     userId: string,
     createMedicationDto: CreateMedicationDto,
@@ -23,14 +23,14 @@ export class MedicationsService {
     });
   }
 
-  async findAll(tenantId: string, userId: string) {
+  async findAllMedicationOfTenantUser(tenantId: string, userId: string) {
     return await this.prisma.medicationLog.findMany({
       where: { tenantId, userId },
       orderBy: { date: 'desc' },
     });
   }
 
-  async findAllTaken(tenantId: string, userId: string) {
+  async findAllMedicationTakenOfTenantUser(tenantId: string, userId: string) {
     return await this.prisma.medicationLog.findMany({
       where: {
         tenantId,
@@ -41,7 +41,10 @@ export class MedicationsService {
     });
   }
 
-  async findAllNotTaken(tenantId: string, userId: string) {
+  async findAllMedicationNotTakenOfTenantUser(
+    tenantId: string,
+    userId: string,
+  ) {
     return await this.prisma.medicationLog.findMany({
       where: {
         tenantId,
@@ -52,7 +55,11 @@ export class MedicationsService {
     });
   }
 
-  async findOne(tenantId: string, userId: string, id: string) {
+  async findOneMedicationOfTenantUser(
+    tenantId: string,
+    userId: string,
+    id: string,
+  ) {
     const medication = await this.prisma.medicationLog.findFirst({
       where: {
         id,
@@ -70,8 +77,8 @@ export class MedicationsService {
     return medication;
   }
 
-  async remove(tenantId: string, userId: string, id: string) {
-    await this.findOne(tenantId, userId, id);
+  async removeMedication(tenantId: string, userId: string, id: string) {
+    await this.findOneMedicationOfTenantUser(tenantId, userId, id);
 
     return await this.prisma.medicationLog.delete({
       where: {

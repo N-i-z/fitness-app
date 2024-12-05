@@ -2,7 +2,7 @@ import {
   Controller,
   Post,
   Get,
-  // Delete,
+  Delete,
   Param,
   Body,
   UseGuards,
@@ -25,7 +25,7 @@ export class TenantController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@UserId() userId: string, @Body() createTenantDto: CreateTenantDto) {
-    return this.tenantService.create(userId, createTenantDto);
+    return this.tenantService.createTenant(userId, createTenantDto);
   }
 
   @Post()
@@ -54,9 +54,9 @@ export class TenantController {
     return this.tenantService.findUsersTenant(userId, id);
   }
 
-  // @Delete(':id')
-  // @HttpCode(HttpStatus.NO_CONTENT)
-  // remove(@UserId() userId: string, @Param('id') id: string) {
-  //   return this.tenantService.remove(userId, id);
-  // }
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@UserId() userId: string, @Param('id') id: string) {
+    return this.tenantService.remove(userId, id);
+  }
 }
